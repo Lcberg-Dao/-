@@ -1,45 +1,42 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
-#include "seqlist.h"
+#include "slist.h"
 
 int main()
 {
-	SL s;
-	//结构体初始化
-	SListInit(&s);
+	SListNode* plist = NULL;
 
 	//尾插
-	SListPushBack(&s, 10);
-	SListPushBack(&s, 20);
-	SListPushBack(&s, 30);
-	SListPushBack(&s, 40);
-	SListPushBack(&s, 50);
-	SListPushBack(&s, 60);
-	SListPushBack(&s, 70);
-
-	//打印数据
-	Print(&s);
-
-	//尾删
-	SListPopBack(&s);
-	Print(&s);
-
+	SListPushBack(&plist, 1);
+	SListPushBack(&plist, 2);
+	SListPushBack(&plist, 3);
+	SListPushBack(&plist, 4);
+	SListPushBack(&plist, 5);
+	//打印链表
+	SListPrint(plist);
 	//头插
-	SListPushFront(&s, 1);
-	//打印数据
-	Print(&s);
-
+	SListPushFront(&plist, 0);
+	SListPushFront(&plist, 1);
+	SListPushFront(&plist, 2);
+	SListPushFront(&plist, 3);
+	SListPushFront(&plist, 4);
+	SListPushFront(&plist, 5);
+	SListPrint(plist);
+	//尾删
+	SListPopBack(&plist);
+	SListPrint(plist);
 	//头删
-	SListPopFront(&s);
-	Print(&s);
+	SListPopFront(&plist);
+	SListPrint(plist);
+	//查找
+	SListNode* search = SListFind(plist, 2);
+	SListPrint(search);
+	//先查找位置在删除或者插入
+	//在pos后插入x
+	//SListInsertAfter(&plist, search, 10);
+	//SListPrint(plist);
+	//删除pos位置之后的值
+	//SListEraseAfter(plist, 10);
 
-
-	//数据销毁
-	int n;
-	scanf("%s", &n);
-	if (n == 0)
-	{
-		SListDestroy(&s);
-	}
 	return 0;
 }
