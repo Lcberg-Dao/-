@@ -5,15 +5,15 @@
 //在动态内存申请一个节点
 SListNode* BuySListNode(SLTDateType x)
 {
-	SListNode* newnode = (SListNode*)malloc(sizeof(SListNode));
-	if (newnode == NULL)
+	SListNode* node = (SListNode*)malloc(sizeof(SListNode));
+	if (node == NULL)
 	{
 		perror("malloc fail");
 		return;
 	}
-	newnode->data = x;
-	newnode->next = NULL;
-	return newnode;
+	node->data = x;
+	node->next = NULL;
+	return node;
 }
 
 //单链表打印
@@ -26,15 +26,16 @@ void SListPrint(SListNode* plist)
 	SListNode* tail = plist;
 	while (tail != NULL)
 	{
-		printf("->%d", tail->data);
+		printf("%d->", tail->data);
 		tail = tail->next;
 	}
-	printf("\n");
+	printf("NULL\n");
 }
 
 //单链表尾插
 void SListPushBack(SListNode** pplist, SLTDateType x)
 {
+	assert(pplist);
 	SListNode* addnode = BuySListNode(x);
 	if (*pplist == NULL)
 	{
@@ -55,15 +56,16 @@ void SListPushBack(SListNode** pplist, SLTDateType x)
  //单链表的头插
 void SListPushFront(SListNode** pplist, SLTDateType x)
 {
-	SListNode* addnode = BuySListNode(x);
+	assert(pplist);
+	SListNode* newnode = BuySListNode(x);
 	if (*pplist == NULL)
 	{
-		*pplist = addnode;
+		*pplist = newnode;
 	}
 	else
 	{
 		SListNode* tail = *pplist;
-		*pplist = addnode;
+		*pplist = newnode;
 		(*pplist)->next = tail;
 	}
 }
@@ -72,6 +74,7 @@ void SListPushFront(SListNode** pplist, SLTDateType x)
 //单链表尾删
 void SListPopBack(SListNode** pplist)
 {
+	assert(pplist);
 	assert(*pplist != NULL);
 
 	if ((*pplist)->next == NULL)
@@ -94,11 +97,11 @@ void SListPopBack(SListNode** pplist)
 	}
 }
 
-
 //头删
 void SListPopFront(SListNode** pplist)
 {
-	assert((*pplist) != NULL);
+	assert(pplist);
+	assert(*pplist);
 
 	if ((*pplist)->next == NULL)
 	{
@@ -118,43 +121,131 @@ void SListPopFront(SListNode** pplist)
 SListNode* SListFind(SListNode* plist, SLTDateType x)
 {
 	assert(plist);
-
-	SListNode* seardata = plist;
-	//记录位置
-	int count = 0;
-	while (seardata != NULL)
+	SListNode* cur = plist;
+	while (cur)
 	{
-		count++;
-		if (seardata->data == x)
+		if (cur->data == x)
 		{
-			printf("->%d在第%d个节点位置\n", x, count);
-			return seardata;
+			return cur;
+		}
+		cur = cur->next;
+	}
+	return NULL;
+}
+
+//在pos之前插入x
+void SListInerTerlist(SListNode** pplist, SListNode* pos, SLTDateType x)
+{
+	assert(pos);
+	assert(pplist);
+	assert(*pplist);
+
+	if (pos == *pplist)
+	{
+		SListPushFront(pplist, x);
+	}
+	else
+	{
+		SListNode* prev = *pplist;
+		while (prev->next != pos)
+		{
+			prev = prev->next;
+		}
+		SListNode* newnode = BuySListNode(x);
+		prev->next = newnode;
+		newnode->next = pos;
+	}
+}
+
+// 在单链表删除pos之前的值
+void SListEraseTerlist(SListNode** pplist, SListNode* pos)
+{
+	assert(pplist);
+	assert(*pplist);
+	assert(pos);
+	if (pos == *pplist)
+	{
+		printf("pos之前没有数据\n");
+		return NULL;
+	}
+	else
+	{
+		SListNode* prev = *pplist;
+		SListNode* scr = NULL;
+		if (prev->next == pos)
+		{
+			*pplist = (*pplist)->next;
+			prev = NULL;
+			return;
 		}
 		else
 		{
-			seardata = seardata->next;
+			while (prev->next != pos)
+			{
+				scr = prev;
+				prev = prev->next;
+			}
+			scr->next = pos;
+			free(prev);
 		}
 	}
-	printf("链表中没有这个数\n");
 }
 
-//// 单链表在pos位置之后插入x
-//void SListInsertAfter(SListNode** pplist,SListNode* pos, SLTDateType x)
-//{
-//	SListNode* tail = *pplist;
-//	SListNode* listnode = NULL;
-//	SListNode* addnode = BuySListNode(x);
-//	while (tail != pos)
-//	{
-//		tail = tail->next;
-//		listnode = tail;
-//	}
-//	listnode->next = addnode;
-//	addnode->next =tail;
-//}
+// 单链表在pos位置之后插入x
+void SListInsertAfter(SListNode* pos, SLTDateType x)
+{
+	assert(pos);
+	SListNode* prev = pos->next;
+	SListNode* newnode = BuySListNode(x);
+	if (pos->next == NULL)
+	{
+		pos->next = newnode;
+	}
+	else
+	{
+		newnode->next = prev;
+		pos->next = newnode;
+	}
+}
 
 // 单链表删除pos位置之后的值
 void SListEraseAfter(SListNode* pos)
 {
+	assert(pos);
+	if (pos->next == NULL)
+	{
+		printf("pos后面没有数据\n");
+		return;
+	}
+	else
+	{
+		SListNode* prev = pos->next;
+		if (prev->next == NULL)
+		{
+			pos->next = NULL;
+			free(prev);
+			prev = NULL;
+		}
+		else
+		{
+			pos->next = prev->next;
+			free(prev);
+			prev = NULL;
+		}
+	}
+}
 
+//销毁链表
+void SLTDestroy(SListNode** pplist)
+{
+	assert(pplist);
+	SListNode* tail = *pplist;
+	while (tail)
+	{
+		SListNode* next = tail->next;
+		free(tail);
+		tail = next;
+	}
+	*pplist = NULL;
+	printf("链表已销毁\n");
 }

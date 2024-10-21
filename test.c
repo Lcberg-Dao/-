@@ -1,70 +1,63 @@
-//#define _CRT_SECURE_NO_WARNINGS 1
-//
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <assert.h>
-//
-//struct ListNode 
-//{
-//    int val;
-//    struct ListNode* next;
-//};
-// 
-////申请动态节点
-//struct ListNode* BuySListNode(int x)
-//{
-//	struct ListNode* node = (struct ListNode*)malloc(sizeof(struct ListNode*));
-//	if (node == NULL)
-//	{
-//		perror("malloc fail");
-//		return;
-//	}
-//	node->val = x;
-//	node->next = NULL;
-//	return node;
-//}
-//
-////单链表尾插
-//void SListPushBack(struct ListNode** pplist, int x)
-//{
-//	assert(pplist);
-//	struct ListNode* newnode = BuySListNode(x);
-//	if (*pplist == NULL)
-//	{
-//		*pplist = newnode;
-//	}
-//	//找尾
-//	else
-//	{
-//		struct ListNode* tail = *pplist;
-//		while (tail->next != NULL)
-//		{
-//			tail = tail->next;
-//		}
-//		tail->next = newnode;
-//	}
-//}
-//void SListPrint(struct ListNode* plist)
-//{
-//	if (plist == NULL)
-//	{
-//		return NULL;
-//	}
-//	struct ListNode* tail = plist;
-//	while (tail != NULL)
-//	{
-//		printf("%d->", tail->val);
-//		tail = tail->next;
-//	}
-//	printf("NULL\n");
-//}
-//
-//int main()
-//{
-//	struct ListNode* plist = NULL;
-//	SListPushBack(&plist, 1);
-//
-//	SListPrint(plist);
-//
-//	return 0;
-//}
+#define _CRT_SECURE_NO_WARNINGS 1
+
+#include "slist.h"
+
+int main()
+{
+	SListNode* plist = NULL;
+
+	//尾插
+	SListPushBack(&plist, 1);
+	SListPushBack(&plist, 2);
+	SListPushBack(&plist, 3);
+	SListPushBack(&plist, 4);
+	SListPushBack(&plist, 5);
+
+	//打印链表
+	SListPrint(plist);
+
+	//头插
+	SListPushFront(&plist, 0);
+	SListPushFront(&plist, 1);
+	SListPushFront(&plist, 2);
+	SListPushFront(&plist, 3);
+	SListPushFront(&plist, 4);
+	SListPushFront(&plist, 5);
+	SListPrint(plist);
+
+	//尾删
+	SListPopBack(&plist);
+	SListPrint(plist);
+
+	//头删
+	SListPopFront(&plist);
+	SListPrint(plist);
+
+	//查找
+	SListNode* search = SListFind(plist, 2);
+
+	//先查找位置在删除或者插入
+	//在Pos位置之前插入
+	SListInerTerlist(&plist, search, 20);
+	SListPrint(plist);
+
+	//删除pos之前的值
+	search = SListFind(plist, 2);
+	SListEraseTerlist(&plist, search);
+	search = NULL;
+	SListPrint(plist);
+
+	//在pos之后插入
+	search = SListFind(plist, 4);
+	SListInsertAfter(search, 80);
+	SListPrint(plist);
+
+	//删除pos后面的数据
+	search = SListFind(plist, 2);
+	SListEraseAfter(search);
+	SListPrint(plist);
+
+	//链表销毁
+	SLTDestroy(&plist);
+	return 0;
+}
