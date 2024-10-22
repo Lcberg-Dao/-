@@ -1,63 +1,60 @@
 #define _CRT_SECURE_NO_WARNINGS 1
-
-#include "slist.h"
+#include "DList.h"
 
 int main()
 {
-	SListNode* plist = NULL;
-
-	//尾插
-	SListPushBack(&plist, 1);
-	SListPushBack(&plist, 2);
-	SListPushBack(&plist, 3);
-	SListPushBack(&plist, 4);
-	SListPushBack(&plist, 5);
-
-	//打印链表
-	SListPrint(plist);
-
-	//头插
-	SListPushFront(&plist, 0);
-	SListPushFront(&plist, 1);
-	SListPushFront(&plist, 2);
-	SListPushFront(&plist, 3);
-	SListPushFront(&plist, 4);
-	SListPushFront(&plist, 5);
-	SListPrint(plist);
+	//创建哨兵位及初始化
+	ListNode* dlist = ListCreate();
+	
+	// 双向链表尾插
+	ListPushBack(dlist, 1);
+	ListPushBack(dlist, 2);
+	ListPushBack(dlist, 3);
+	ListPushBack(dlist, 4);
+	ListPushBack(dlist, 5);
+	ListPushBack(dlist, 6);
+	//打印
+	ListPrint(dlist);
 
 	//尾删
-	SListPopBack(&plist);
-	SListPrint(plist);
+	ListPopBack(dlist);
+	ListPrint(dlist);
+	ListPopBack(dlist);
+	ListPrint(dlist);
+	ListPopBack(dlist);
+	ListPrint(dlist);
+	
+	//头插
+	ListPushFront(dlist, 1);
+	ListPrint(dlist);
+	ListPushFront(dlist, 2);
+	ListPrint(dlist);
+	ListPushFront(dlist, 3);
+	ListPrint(dlist);
+	ListPushFront(dlist, 4);
+	ListPrint(dlist);
+	ListPushFront(dlist, 5);
+	ListPrint(dlist);
+	ListPushFront(dlist, 6);
+	ListPrint(dlist);
 
 	//头删
-	SListPopFront(&plist);
-	SListPrint(plist);
+	ListPopFront(dlist);
+	ListPopFront(dlist);
+	ListPopFront(dlist);
+	ListPrint(dlist);
 
 	//查找
-	SListNode* search = SListFind(plist, 2);
+	ListNode* pos = ListFind(dlist, 1);
+	//在pos前面插入x
+	ListInsert(pos, 2);
+	ListPrint(dlist);
 
-	//先查找位置在删除或者插入
-	//在Pos位置之前插入
-	SListInerTerlist(&plist, search, 20);
-	SListPrint(plist);
+	//查找
+	pos = ListFind(dlist, 2);
+	// 双向链表删除pos位置的节点
+	ListErase(pos);
+	ListPrint(dlist);
 
-	//删除pos之前的值
-	search = SListFind(plist, 2);
-	SListEraseTerlist(&plist, search);
-	search = NULL;
-	SListPrint(plist);
-
-	//在pos之后插入
-	search = SListFind(plist, 4);
-	SListInsertAfter(search, 80);
-	SListPrint(plist);
-
-	//删除pos后面的数据
-	search = SListFind(plist, 2);
-	SListEraseAfter(search);
-	SListPrint(plist);
-
-	//链表销毁
-	SLTDestroy(&plist);
 	return 0;
 }
