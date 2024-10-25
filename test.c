@@ -1,30 +1,38 @@
 #define _CRT_SECURE_NO_WARNINGS 1
+#include "queue.h"
 
-#include "Stack.h"
-
+void Print(Queue* ps)
+{
+	printf("队头数据为->%d\n", QueueFront(ps));
+	printf("队尾数据为->%d\n", QueueBack(ps));
+}
 int main()
 {
-	ST stack;
+	//创建队列
+	Queue queue;
 
-	//栈初始化
-	STInit(&stack);
+	//初始化
+	QueueInit(&queue);
 
+	//入队列
+	Queuepush(&queue, 1);
+	Queuepush(&queue, 2);
+	Queuepush(&queue, 3);
+	Queuepush(&queue, 4);
+	Queuesize(&queue);
+	Print(&queue);
 
-	//入栈
-	STpush(&stack, 4);
-	STpush(&stack, 3);
-	STpush(&stack, 2);
-	//出栈
-	STpop(&stack);
-	STpush(&stack, 1);
-	STpop(&stack);
-	STpop(&stack);
+	//出队列
+	Queuepop(&queue);
+	//查看队列中的元素个数
+	Queuesize(&queue);
+	Print(&queue);
 
-	//栈中数据的个数 
-	STsize(&stack);
+	Queuepush(&queue, 5);
+	Queuesize(&queue);
+	Print(&queue);
 
-	//查询栈顶元素
-	printf("栈顶的元素为->%d\n", STTop(&stack));
-
+	//销毁队列
+	QueueDestroy(&queue);
 	return 0;
 }
